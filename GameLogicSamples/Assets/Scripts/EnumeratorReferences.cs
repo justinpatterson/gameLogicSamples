@@ -5,7 +5,3 @@ using System.Collections.Generic;
 public enum GamePhases { init, start, gameplay, end }
 public enum GameplaySubphases { inProgress, paused }
 #endregion
-
-#region info classes
-
-#endregion

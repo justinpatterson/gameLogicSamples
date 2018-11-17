@@ -13,6 +13,9 @@ public class GameManager_BASE : MonoBehaviour {
 
     Dictionary<GamePhases, GamePhaseBehavior_BASE> _gamePhaseDictionaryReference = new Dictionary<GamePhases, GamePhaseBehavior_BASE>();
 
+    public delegate void OnUpdateDelegate();
+    public static OnUpdateDelegate onUpdateDelegateEvent;
+
     protected virtual void Awake()
     {
         if (instance == null)
@@ -26,13 +29,15 @@ public class GameManager_BASE : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
 
         Debug.Log("Base awake has been called.");
+        PopulateGamePhaseDictionary();
+
         InitGame();
     }
 
     protected virtual void InitGame()
     {
         Debug.Log("Game has been Initialized.");
-        PopulateGamePhaseDictionary();
+        TriggerPhaseTransition(GamePhases.init);
     }
 
     void PopulateGamePhaseDictionary()
@@ -56,6 +61,12 @@ public class GameManager_BASE : MonoBehaviour {
             currentPhaseBehavior.EndPhase();
             nextPhaseBehavior.StartPhase();
         }
+    }
+
+    private void Update()
+    {
+        if (onUpdateDelegateEvent != null) onUpdateDelegateEvent();
+        if (Input.GetKeyDown(KeyCode.Space)) TriggerPhaseTransition(GamePhases.start);
     }
 
 }
